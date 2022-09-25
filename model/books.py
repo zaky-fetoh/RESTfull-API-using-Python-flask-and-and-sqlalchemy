@@ -1,11 +1,11 @@
-from dataclasses import dataclass
-from sqlite3 import DatabaseError
 from . import datebase
+import marshmallow as ma
+import marshmallow_sqlalchemy as masql
 
 db = datebase.db
 
 
-class book(db.Model):
+class Book(db.Model):
     id = db.Column(db.Integer)
     name = db.Column(db.String(30))
     author_id = db.Column(db.Integer)
@@ -24,3 +24,12 @@ class book(db.Model):
         db.session.commit()
         return self
 
+
+class BookSchema(masql.ModelSchema):
+    class Meta(masql.ModelSchema.Meta):
+        model = Book
+        sqla = db.session
+
+    id = ma.fields.Number()
+    name = ma.fields.String()
+    author_id = ma.fields.String()

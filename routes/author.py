@@ -1,3 +1,4 @@
+import flask_sqlalchemy as alchemy
 import model
 import flask
 
@@ -14,10 +15,17 @@ def getallAuthor():
 @router.route("/<int:authId>", methods=["GET"])
 def getParticularAuhor(authId):
     author = model.Author.query.filter_by(id=authId)
-    author = model.AuthorSchema().dump(author)
+    try:
+        author = model.db.session.execute(author).one()
+    except alchemy.orm.exc.NoResultFound:
+        return flask.make_response(flask.jsonify({
+            "ok": True,
+            "data": [],
+        }))
+    author = model.AuthorSchema().dump(author[0])
     return flask.make_response(flask.jsonify({
         "ok": True,
-        "data": autor,
+        "data": author,
     }))
 
 
@@ -29,10 +37,16 @@ def addAuthor():
         "ok": True,
     }))
 
-@router.router("/<int:authId>", methods=["DELETE"])
+@router.route("/<int:authId>", methods=["DELETE"])
 def deleteAuthor(authId):
-    AutherObj = model.Author.query.filter_by(id=authId)
-    AutherObj.delete()
+    AuthorObj = model.Author.query.filter_by(id=authId)
+    try:
+        AuthorObj = model.db.session.execute(AuthorObj).one()
+    except alchemy.orm.exc.NoResultFound :
+        return flask.make_response(flask.jsonify({
+            "ok": False,
+        }), 404)
+    AuthorObj[0].delete()
     return flask.make_response(flask.jsonify({
         "ok":True,
     }))

@@ -15,15 +15,16 @@ class Book(db.Model):
         self.author_id = author_id
         self.name = name
 
-    def save(self):
+    def create(self):
         db.session.add(self)
-        db.commit(self)
+        db.session.commit()
         return self
 
     def delete(self):
         db.session.delete(self)
         db.session.commit()
         return self
+
 
 
 class BookSchema(masql.SQLAlchemySchema):

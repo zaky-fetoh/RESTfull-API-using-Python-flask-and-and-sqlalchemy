@@ -10,7 +10,7 @@ with app.app_context():
 
 
 app.register_blueprint(routes.author.router, url_prefix="/author")
-
+app.register_blueprint(routes.books.router, url_prefix= "/book")
 
 
 if __name__ == "__main__":

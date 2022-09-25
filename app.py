@@ -1,24 +1,16 @@
 import flask
-
+import model
+import routes
 
 app = flask.Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+model.db.init_app(app)
+with app.app_context():
+    model.db.create_all()
 
 
-@app.route("/", methods=["GET"])
-def getRout():
-    p = flask.jsonify({
-        "name":"WEWEW", 
-        "SAdss":3223
-    })
-    print(p)
-    return flask.make_response(p )
+app.register_blueprint(routes.author.router, url_prefix="/author")
 
-
-@app.route("/", methods= ["POST"])
-def pot():
-    data = flask.request.get_json()
-    print( type(data) )
-    
 
 
 if __name__ == "__main__":

@@ -5,12 +5,12 @@ import marshmallow_sqlalchemy as masql
 db = datebase.db
 
 class Author(db.Model):
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key =True)
     first_name = db.Column(db.String(10))
     last_name = db.Column(db.String(10))
 
-    def __init__(self, firt_name, last_name) -> None:
-        self.first_name = firt_name
+    def __init__(self, first_name, last_name) -> None:
+        self.first_name = first_name
         self.last_name = last_name
     def create(self):
         db.session.add(self)
@@ -22,13 +22,13 @@ class Author(db.Model):
         return self
 
 
-class AuthorSchema(masql.ModelSchema):
-    class Meta(masql.ModelSchema.Meta):
+class AuthorSchema(masql.SQLAlchemySchema):
+    class Meta(masql.SQLAlchemySchema.Meta):
         model= Author
         sqla = db.session
     id= ma.fields.Number()
-    first_name = ma.fields.String()
-    last_name= ma.fields.String()
+    first_name = ma.fields.String(required= True)
+    last_name= ma.fields.String(required= True)
 
 
 
